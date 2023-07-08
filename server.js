@@ -1,6 +1,12 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const Product = require('./models/productModule')
 const app = express();
+
+// middleware
+
+app.use(express.json);
+
 
 // routes
 
@@ -12,8 +18,17 @@ app.get('/blog',(req, res) => {
     res.send('Hello  blog');
 ;})
 
+app.post('/product', async(req, res) => {
+   try{
+    const product = await Product.create(req.body);
+    res.status(200).json(product);
+    } catch(error) {
+    console.log(error.message);
+    res.status(500).json({message: error.message})
+   }
+});
 
-
+// connect  to database
  mongoose.connect('mongodb+srv://marius3837:123Qwe12r+@cluster0.afi4oij.mongodb.net/?retryWrites=true&w=majority')
     .then(() =>{
       console.log('connected to MMongoDB');
