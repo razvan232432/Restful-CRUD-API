@@ -6,6 +6,7 @@ const app = express();
 // middleware
 
 app.use(express.json);
+app.use(express.urlencoded({extended: false}));
 
 
 // routes
@@ -30,7 +31,7 @@ app.get('/products', async(req, res) => {
 app.get('/products/:id', async(req, res) => {
   try {
     const {id} = req.params;
-    const product= await Product.find({});
+    const product= await Product.findById(id);
     res.status(200).json(product);
   } catch (error) {
     res.status(500).json({message: error.message});
@@ -46,6 +47,24 @@ app.post('/product', async(req, res) => {
     res.status(500).json({message: error.message})
    }
 });
+
+// update a product 
+
+app.put('/products/:id', async(req, res) => {
+  try {
+    const {id} = req.params;
+    const product= await Product.findByIdAndUpdate(id, req.body);
+    //we cannot  find  a product
+    if(!product){
+      return res.status(404).json({message: `cannot find any product with ID ${id}`})
+    }
+    res.status(200).json(product);
+    const updateProduct = await Product.findById(id);
+    res.status(200).json(updateProduct); 
+  } catch (error) {
+    res.status(500).json({message: error.message});
+  }
+})
 
 // connect  to database
  mongoose.connect('mongodb+srv://marius3837:123Qwe12r+@cluster0.afi4oij.mongodb.net/?retryWrites=true&w=majority')
