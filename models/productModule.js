@@ -23,3 +23,8 @@ const productSchema = mongoose.Schema(
         timestamp: true
     }
 );
+
+//create product model
+
+const Product = mongoose.model('Product', productSchema);
+module.exports = Product;
